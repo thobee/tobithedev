@@ -1,7 +1,7 @@
 import { useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
-import { pageLinks, socialLinks, logo, devTobiPdf } from '../../data/site';
+import { pageLinks, socialLinks, logo, resumePdf } from '../../data/site';
 
 function DockItem({ label, active, children, as: Component, wrapClass = '', ...props }) {
   return (
@@ -25,8 +25,8 @@ const FloatingDock = ({ scrollHref, dark = false, fixed = false }) => {
   const handleResume = (e) => {
     e.preventDefault();
     const link = document.createElement('a');
-    link.href = devTobiPdf;
-    link.download = 'dev-tobi.pdf';
+    link.href = resumePdf;
+    link.download = 'Mubarak-Oyewole-Full-Stack-Engineer.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

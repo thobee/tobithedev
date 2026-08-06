@@ -37,7 +37,7 @@ const About = () => (
             </p>
             <p className="body-text mb-8">
               Outside of coding, I'm into movies, anime, and music — always learning,
-              staying consistent, and improving my craft from Ibadan, Nigeria.
+              staying consistent, and improving my craft from Abuja, Nigeria.
             </p>
             <Link to="/projects" className="link-arrow">
               more about my work

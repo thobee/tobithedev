@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
+import DocumentMeta from './components/DocumentMeta';
 
 const Home = lazy(() => import('./pages/Home'));
 const ProjectsPage = lazy(() => import('./pages/Projects'));
@@ -42,6 +43,7 @@ function AppRoutes() {
 
   return (
     <>
+      <DocumentMeta />
       <ScrollToTop />
       <Suspense fallback={<div className="min-h-screen bg-[var(--color-surface)]" />}>
         <Routes>
