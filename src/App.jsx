@@ -1,55 +1,66 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
-import Navigation from './components/Navigation';
-import Hero from './components/Hero';
-import About from './components/About';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import Contact from './components/Contact';
-import SocialSidebar from './components/SocialSidebar';
 
-function App() {
+const Home = lazy(() => import('./pages/Home'));
+const ProjectsPage = lazy(() => import('./pages/Projects'));
+const SkillsPage = lazy(() => import('./pages/Skills'));
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
   useEffect(() => {
-    // Initialize Lenis for smooth scrolling
-    const lenis = new Lenis({
-      duration: 1.2, // Smooth scroll duration
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing for smoothness
-      smoothWheel: true, // Enable smooth scrolling on wheel
-      smoothTouch: false, // Disable on touch devices if needed
-      touchMultiplier: 2, // Adjust for touch sensitivity
-    });
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
+  return null;
+}
 
-    // Animation loop for Lenis
+function AppRoutes() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+    window.lenis = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
-
-    // Cleanup on unmount
     return () => {
       lenis.destroy();
+      if (window.lenis === lenis) delete window.lenis;
     };
   }, []);
 
   return (
-    <div className="App">
-      <style>{`
-        html {
-          scroll-behavior: auto;
-        }
-        body {
-          overflow-x: hidden;
-        }
-      `}</style>
-      <Navigation />
-      <SocialSidebar />
-      <Hero />
-      <About />
-      <Projects />
-      <Skills />
-      <Contact />
-    </div>
+    <>
+      <ScrollToTop />
+      <Suspense fallback={<div className="min-h-screen bg-[var(--color-surface)]" />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/skills" element={<SkillsPage />} />
+        </Routes>
+      </Suspense>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div className="App min-h-screen bg-[var(--color-surface)]">
+        <AppRoutes />
+      </div>
+    </BrowserRouter>
   );
 }
 
